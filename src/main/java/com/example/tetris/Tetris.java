@@ -88,15 +88,14 @@ public class Tetris extends Application {
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                                 Number old_val, Number new_val) {
-               //change volume
+                //change volume
 
-                if (volumeSlider.isFocused()){
+                if (volumeSlider.isFocused()) {
                     volumeSlider.setDisable(true);
-                }
-                else{
+                } else {
                     volumeSlider.setDisable(false);
                 }
-                mediaPlayer.setVolume(volumeSlider.getValue()/100);
+                mediaPlayer.setVolume(volumeSlider.getValue() / 100);
             }
         });
 
@@ -168,7 +167,7 @@ public class Tetris extends Application {
         timeline = new Timeline(new KeyFrame(Duration.millis(5), (ActionEvent event) -> {
             frame++;
             if (frame % speed == 0) {
-                moveDown(1);
+                moveDown(1,0);
                 redraw();
                 ghostPiece();
             }
@@ -202,7 +201,7 @@ public class Tetris extends Application {
 
 
             } else if (e.getCode() == DOWN) {
-                moveDown(1);
+                moveDown(1,0);
             } else if (e.getCode() == RIGHT) {
                 moveRight();
             } else if (e.getCode() == LEFT) {
@@ -211,7 +210,7 @@ public class Tetris extends Application {
                 hardDown(1);
             } else if (e.getCode() == C) {
 
-                if(hcount == 0) {
+                if (hcount == 0) {
                     holdPiece();
                     hcount++;
                 }
@@ -293,7 +292,9 @@ public class Tetris extends Application {
     static void spawnBlock() {
         spawnBlock(-1);
     }
+
     MediaPlayer mediaPlayer;
+
     public void songPlayer() {
         String musicFile = "src/main/resources/com/example/tetris/Tetris.mp3";
         Media sound = new Media(new File(musicFile).toURI().toString());
@@ -337,7 +338,7 @@ public class Tetris extends Application {
     private static void hardDown(int mode) {
 
         for (int i = 0; i < 30; i++) {
-            moveDown(mode);
+            moveDown(mode, 1);
         }
     }
 
@@ -407,7 +408,7 @@ public class Tetris extends Application {
     }
 
 
-    private static void moveDown(int mode) {
+    private static void moveDown(int mode, int hard) {
 
         if (mode == 1) {
             if (!checkDown(1)) {
@@ -426,7 +427,14 @@ public class Tetris extends Application {
             }
             if (checkDown(1)) {
                 timeline.stop();
-                timer();
+                if (hard == 0) {
+                    timer(cycleCount - (level*18));
+                }
+                else if (hard == 1){
+                    timer(10);
+                }
+
+
             }
         } else {
             if (!checkDown(2)) {
@@ -441,6 +449,7 @@ public class Tetris extends Application {
             }
             if (checkDown(2)) {
                 redraw();
+
             }
 
         }
@@ -448,13 +457,14 @@ public class Tetris extends Application {
 
     static Timeline time;
     static int counter = 0;
+    static int cycleCount = 140;
 
-    public static void timer() {
+    public static void timer(int cycleCount) {
         if (counter == 0) {
 
             time = new Timeline(new KeyFrame(Duration.millis(5), (ActionEvent event) -> {
             }));
-            time.setCycleCount(100);
+            time.setCycleCount(cycleCount);
             time.play();
         }
 
@@ -527,7 +537,8 @@ public class Tetris extends Application {
         }
         return addScore;
     }
-    static void updateScore(){
+
+    static void updateScore() {
         score += calcScore();
         scoreLabel.setText("" + score);
         rowFilledCount = 0;
@@ -543,6 +554,7 @@ public class Tetris extends Application {
         }
         return false;
     }
+
     static void clearNextBlockRender() {
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 4; j++) {
@@ -551,6 +563,7 @@ public class Tetris extends Application {
             }
         }
     }
+
     //i love books
     public static void renderNextBlock(int num) {
         int[][] toPrint = new int[0][];
@@ -730,8 +743,7 @@ public class Tetris extends Application {
             tl.playFromStart();
 
             tl.setOnFinished(event -> bom(row));
-        }
-        else{
+        } else {
             updateScore();
         }
     }
@@ -758,7 +770,7 @@ public class Tetris extends Application {
         checkRow();
     }
 
-    static void bom(int row){
+    static void bom(int row) {
         for (int i = 0; i < 10; i++) {
             intGrid[row][i] = 0;
         }
@@ -769,7 +781,7 @@ public class Tetris extends Application {
         }));
         t.setCycleCount(1);
         t.playFromStart();
-        t.setOnFinished(event ->com(row) );
+        t.setOnFinished(event -> com(row));
     }
 
 
