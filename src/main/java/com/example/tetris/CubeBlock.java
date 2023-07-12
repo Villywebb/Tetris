@@ -3,7 +3,7 @@ package com.example.tetris;
 import java.util.ArrayList;
 
 public class CubeBlock {
-    private static ArrayList<int[][]> rotations = new ArrayList<int[][]>();
+    private static ArrayList<int[][]> rotations = new ArrayList<>();
 
     public CubeBlock() {
 

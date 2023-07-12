@@ -1,2 +1,2 @@
 # Tetris
-enkelt tetris spel
+Enkelt tetris spel
