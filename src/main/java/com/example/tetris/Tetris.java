@@ -454,7 +454,7 @@ public class Tetris extends Application {
 
             time = new Timeline(new KeyFrame(Duration.millis(5), (ActionEvent event) -> {
             }));
-            time.setCycleCount(70);
+            time.setCycleCount(100);
             time.play();
         }
 
