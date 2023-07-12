@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -43,7 +44,7 @@ public class Tetris extends Application {
     public final static int gridNumRows = 20;
 
     static Group root = new Group();
-    Scene scene = new Scene(root, 750, 750);
+    Scene scene = new Scene(root, 750, 750, Color.rgb(35, 35, 35));
     int blocksize;
     ArrayList<Integer> nextFour = new ArrayList<>();
     static int tetrisNum = 0;
@@ -72,6 +73,10 @@ public class Tetris extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        Rectangle rect = new Rectangle(200,20,350,700);
+        rect.setFill(Color.rgb(25,25,25));
+        rect.setViewOrder(1000);
+        root.getChildren().add(rect);
 
         volumeSlider.setValue(50);
         volumeSlider.setPrefHeight(100);
@@ -80,6 +85,7 @@ public class Tetris extends Application {
         volumeSlider.setLayoutY(600);
         volumeSlider.setMax(100);
         volumeSlider.setMin(0);
+
 
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
@@ -92,33 +98,39 @@ public class Tetris extends Application {
         });
         root.getChildren().add(volumeSlider);
         Label scoreL = new Label("SCORE");
+        scoreL.setTextFill(Color.GRAY);
         Label levelL = new Label("LEVEL");
+        levelL.setTextFill(Color.GRAY);
         Label linesL = new Label("LINES");
+        linesL.setTextFill(Color.GRAY);
         scoreL.setFont(Font.font(30));
         levelL.setFont(Font.font(30));
         linesL.setFont(Font.font(30));
         scoreL.setLayoutX(30);
         levelL.setLayoutX(30);
         linesL.setLayoutX(30);
-        scoreL.setLayoutY(400);
-        levelL.setLayoutY(490);
-        linesL.setLayoutY(580);
+        scoreL.setLayoutY(400-130);
+        levelL.setLayoutY(490-130);
+        linesL.setLayoutY(580-130);
         root.getChildren().addAll(scoreL, linesL, levelL);
         songPlayer();
         linesLabel = new Label("0");
+        linesLabel.setTextFill(Color.GRAY);
         linesLabel.setFont(Font.font(30));
         linesLabel.setLayoutX(40);
-        linesLabel.setLayoutY(620);
+        linesLabel.setLayoutY(620-130);
         root.getChildren().add(linesLabel);
         scoreLabel = new Label("0");
+        scoreLabel.setTextFill(Color.GRAY);
         scoreLabel.setFont(Font.font(30));
         scoreLabel.setLayoutX(40);
-        scoreLabel.setLayoutY(440);
+        scoreLabel.setLayoutY(440-130);
         root.getChildren().add(scoreLabel);
         levelLabel = new Label("0");
+        levelLabel.setTextFill(Color.GRAY);
         levelLabel.setFont(Font.font(30));
         levelLabel.setLayoutX(40);
-        levelLabel.setLayoutY(530);
+        levelLabel.setLayoutY(530-130);
         root.getChildren().add(levelLabel);
         ll.put(0, 10);
         ll.put(1, 10);
@@ -234,8 +246,9 @@ public class Tetris extends Application {
         int[][] toPrint = toPrint(blo, 0);
         int y = 0;
         int x = 0;
-        int u = 0;
-        while (u < toPrint.length) {
+        int u = 1;
+        int h = 1;
+        while (u < h + toPrint.length) {
             for (int j = 0; j < toPrint[0].length; j++) {
                 if (toPrint[y][x] == 1) {
                     holdIntGrid[u][j] = 1;
@@ -1031,23 +1044,72 @@ public class Tetris extends Application {
 
         for (int i = 0; i < 30; i++) {
             for (int j = 0; j < 10; j++) {
-                Color färg = Color.TRANSPARENT;
-                grid[i][j] = new Ruta(färg, 200 + 35 * j, -330 + 35 * i, 0);
+                grid[i][j] = new Ruta(Color.TRANSPARENT, 200 + 35 * j, -330 + 35 * i, 0);
                 root.getChildren().add(grid[i][j].getRect());
-                // root.getChildren().add(grid[i][j].getLabel());
             }
         }
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 4; j++) {
-                nextGrid[i][j] = new Ruta(Color.TRANSPARENT, 600 + 35 * j, 50 + 35 * i, 0);
+                nextGrid[i][j] = new Ruta(Color.TRANSPARENT, 585 + 35 * j, 55 + 35 * i, 0);
                 root.getChildren().add(nextGrid[i][j].getRect());
             }
         }
+
+        Rectangle nextRect = new Rectangle(585,55,140,11*35);
+        nextRect.setFill(Color.rgb(25,25,25));
+        nextRect.setViewOrder(1000);
+        root.getChildren().add(nextRect);
+
+
+
+        for (int i = 0; i < 5; i++) {
+            Line line = new Line();
+            line.setViewOrder(-1);
+            line.setStrokeWidth(3);
+            line.setStartX(585 + 35 * i);
+            line.setStartY(55);
+            line.setEndX(585 + 35 * i);
+            line.setEndY(50+11*35);
+            root.getChildren().add(line);
+        }
+        for (int i = 0; i < 12; i++) {
+            Line line = new Line();
+            line.setViewOrder(-1);
+            line.setStrokeWidth(3);
+            line.setStartY(55 + 35 * i);
+            line.setStartX(585);
+            line.setEndY(55 + 35 * i);
+            line.setEndX(585+4*35);
+            root.getChildren().add(line);
+        }
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                holdGrid[i][j] = new Ruta(Color.TRANSPARENT, 40 + 35 * j, 50 + 35 * i, 0);
+                holdGrid[i][j] = new Ruta(Color.TRANSPARENT, 25 + 35 * j, 55 + 35 * i, 0);
                 root.getChildren().add(holdGrid[i][j].getRect());
             }
+        }
+
+        Rectangle holdRect = new Rectangle(25,55,4*35,4*35);
+        holdRect.setFill(Color.rgb(25,25,25));
+        holdRect.setViewOrder(1000);
+        root.getChildren().add(holdRect);
+        for (int i = 0; i < 5; i++) {
+            Line line = new Line();
+            line.setViewOrder(-1);
+            line.setStrokeWidth(3);
+            line.setStartX(25 + 35 * i);
+            line.setStartY(55);
+            line.setEndX(25 + 35 * i);
+            line.setEndY(55+4*35);
+            root.getChildren().add(line);
+            Line line2 = new Line();
+            line2.setViewOrder(-1);
+            line2.setStrokeWidth(3);
+            line2.setStartX(25);
+            line2.setStartY(55+ 35*i);
+            line2.setEndX(25+35*4);
+            line2.setEndY(55+i*35);
+            root.getChildren().add(line2);
         }
     }
 
@@ -1072,6 +1134,8 @@ public class Tetris extends Application {
                 }
             }
         }
+
+
     }
 
 
