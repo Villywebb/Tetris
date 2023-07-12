@@ -19,7 +19,6 @@ import javafx.util.Duration;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,11 +64,9 @@ public class Tetris extends Application {
     static Timeline timeline;
     static int oldRotate;
     static Label linesLabel;
-
     static HashMap<Integer, Integer> sentBlocks = new HashMap<>();
     static HashMap<Integer, Integer> ll = new HashMap<>();
-    static double speed = 125;
-
+    static double speed = 150;
     static int hcount = 0;
     Slider volumeSlider = new Slider();
 
@@ -79,7 +76,6 @@ public class Tetris extends Application {
         volumeSlider.setValue(50);
         volumeSlider.setPrefHeight(100);
         volumeSlider.setFocusTraversable(false);
-
         volumeSlider.setLayoutX(600);
         volumeSlider.setLayoutY(600);
         volumeSlider.setMax(100);
@@ -88,16 +84,12 @@ public class Tetris extends Application {
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                                 Number old_val, Number new_val) {
-                //change volume
-
-                if (volumeSlider.isFocused()) {
+                if (volumeSlider.isFocused())
                    root.requestFocus();
-                }
 
                 mediaPlayer.setVolume(volumeSlider.getValue() / 100);
             }
         });
-
         root.getChildren().add(volumeSlider);
         Label scoreL = new Label("SCORE");
         Label levelL = new Label("LEVEL");
@@ -112,14 +104,12 @@ public class Tetris extends Application {
         levelL.setLayoutY(490);
         linesL.setLayoutY(580);
         root.getChildren().addAll(scoreL, linesL, levelL);
-
         songPlayer();
         linesLabel = new Label("0");
         linesLabel.setFont(Font.font(30));
         linesLabel.setLayoutX(40);
         linesLabel.setLayoutY(620);
         root.getChildren().add(linesLabel);
-
         scoreLabel = new Label("0");
         scoreLabel.setFont(Font.font(30));
         scoreLabel.setLayoutX(40);
@@ -130,8 +120,6 @@ public class Tetris extends Application {
         levelLabel.setLayoutX(40);
         levelLabel.setLayoutY(530);
         root.getChildren().add(levelLabel);
-
-
         ll.put(0, 10);
         ll.put(1, 10);
         ll.put(2, 10);
@@ -161,8 +149,6 @@ public class Tetris extends Application {
         ll.put(26, 200);
         ll.put(27, 200);
         ll.put(28, 200);
-
-
         timeline = new Timeline(new KeyFrame(Duration.millis(5), (ActionEvent event) -> {
             frame++;
             if (frame % speed == 0) {
@@ -182,9 +168,6 @@ public class Tetris extends Application {
         stage.setScene(scene);
         stage.show();
         redraw();
-        //200 fps
-
-
         scene.setOnKeyPressed(e -> {
 
             if (e.getCode() == UP) {
