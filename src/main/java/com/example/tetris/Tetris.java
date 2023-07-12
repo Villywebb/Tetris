@@ -91,10 +91,9 @@ public class Tetris extends Application {
                 //change volume
 
                 if (volumeSlider.isFocused()) {
-                    volumeSlider.setDisable(true);
-                } else {
-                    volumeSlider.setDisable(false);
+                   root.requestFocus();
                 }
+
                 mediaPlayer.setVolume(volumeSlider.getValue() / 100);
             }
         });
@@ -428,7 +427,7 @@ public class Tetris extends Application {
             if (checkDown(1)) {
                 timeline.stop();
                 if (hard == 0) {
-                    timer(cycleCount - (level*18));
+                    timer(cycleCount - (level*12));
                 }
                 else if (hard == 1){
                     timer(10);
@@ -457,7 +456,7 @@ public class Tetris extends Application {
 
     static Timeline time;
     static int counter = 0;
-    static int cycleCount = 140;
+    static int cycleCount = 160;
 
     public static void timer(int cycleCount) {
         if (counter == 0) {
