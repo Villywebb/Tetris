@@ -514,6 +514,8 @@ public class Tetris extends Application {
         return false;
     }
 
+    //hellooo
+
     static void clearNextBlockRender() {
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 4; j++) {
