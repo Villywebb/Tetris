@@ -81,8 +81,8 @@ public class Tetris extends Application {
         volumeSlider.setValue(50);
         volumeSlider.setPrefHeight(100);
         volumeSlider.setFocusTraversable(false);
-        volumeSlider.setLayoutX(600);
-        volumeSlider.setLayoutY(600);
+        volumeSlider.setLayoutX(585);
+        volumeSlider.setLayoutY(650);
         volumeSlider.setMax(100);
         volumeSlider.setMin(0);
 
@@ -321,7 +321,7 @@ public class Tetris extends Application {
 
         for (int i = 0; i < 30; i++) {
             for (int j = 0; j < 10; j++) {
-                if (ghostGrid[i][j] == 1 && intGrid[i][j] != 1 && grid[i][j].getColor() != Color.SADDLEBROWN) {
+                if (ghostGrid[i][j] == 1 && intGrid[i][j] != 1 && grid[i][j].getColor() != Color.rgb(0, 255, 42)) {
                     ghost = Color.web(blockColors[tetrisNum].toString(), 0.2);
                     grid[i][j].setColor(ghost);
                 }
@@ -725,16 +725,19 @@ public class Tetris extends Application {
         int row = rowFilled();
         if (row != -1) {
 
-            tl = new Timeline(new KeyFrame(Duration.millis(20), new EventHandler<ActionEvent>() {
-                private int i = 0;
+            tl = new Timeline(new KeyFrame(Duration.millis(70), new EventHandler<ActionEvent>() {
+                private int i = 4;
+                private int j = 5;
 
                 @Override
                 public void handle(ActionEvent evnt) {
-                    grid[row][i].setColor(Color.SADDLEBROWN);
-                    i++;
+                    grid[row][i].setColor(Color.rgb(0, 255, 42));
+                    grid[row][j].setColor(Color.rgb(0, 255, 42));
+                    i--;
+                    j++;
                 }
             }));
-            tl.setCycleCount(10);
+            tl.setCycleCount(5);
             tl.playFromStart();
 
             tl.setOnFinished(event -> bom(row));
@@ -756,7 +759,7 @@ public class Tetris extends Application {
         }
         for (int i = 0; i < 30; i++) {
             for (int j = 0; j < 10; j++) {
-                if (grid[i][j].getColor() == Color.SADDLEBROWN) {
+                if (grid[i][j].getColor() == Color.rgb(0, 255, 42)) {
                     grid[i][j].setColor(Color.TRANSPARENT);
                 }
             }
@@ -1118,7 +1121,7 @@ public class Tetris extends Application {
             for (int j = 0; j < 10; j++) {
                 if (i > 9) {
                     if (intGrid[i][j] == 0) {
-                        if (grid[i][j].getColor() != Color.SADDLEBROWN) {
+                        if (grid[i][j].getColor() != Color.rgb(0, 255, 42)) {
                             grid[i][j].setColor(Color.TRANSPARENT);
                             grid[i][j].setNum(0);
                         }
@@ -1126,7 +1129,7 @@ public class Tetris extends Application {
                         grid[i][j].setColor(blockColors[tetrisNum]);
                         grid[i][j].setNum(1);
                     } else {
-                        if (grid[i][j].getColor() != Color.SADDLEBROWN) {
+                        if (grid[i][j].getColor() != Color.rgb(0, 255, 42)) {
                             grid[i][j].setColor(blockColors[sentBlocks.get(intGrid[i][j])]);
                             grid[i][j].setNum(intGrid[i][j]);
                         }
