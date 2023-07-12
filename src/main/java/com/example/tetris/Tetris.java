@@ -3,11 +3,14 @@ package com.example.tetris;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
@@ -68,9 +71,36 @@ public class Tetris extends Application {
     static double speed = 125;
 
     static int hcount = 0;
+    Slider volumeSlider = new Slider();
 
     @Override
     public void start(Stage stage) throws IOException {
+
+        volumeSlider.setValue(50);
+        volumeSlider.setPrefHeight(100);
+        volumeSlider.setFocusTraversable(false);
+
+        volumeSlider.setLayoutX(600);
+        volumeSlider.setLayoutY(600);
+        volumeSlider.setMax(100);
+        volumeSlider.setMin(0);
+
+        volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+               //change volume
+
+                if (volumeSlider.isFocused()){
+                    volumeSlider.setDisable(true);
+                }
+                else{
+                    volumeSlider.setDisable(false);
+                }
+                mediaPlayer.setVolume(volumeSlider.getValue()/100);
+            }
+        });
+
+        root.getChildren().add(volumeSlider);
         Label scoreL = new Label("SCORE");
         Label levelL = new Label("LEVEL");
         Label linesL = new Label("LINES");
@@ -263,11 +293,11 @@ public class Tetris extends Application {
     static void spawnBlock() {
         spawnBlock(-1);
     }
-
+    MediaPlayer mediaPlayer;
     public void songPlayer() {
         String musicFile = "src/main/resources/com/example/tetris/Tetris.mp3";
         Media sound = new Media(new File(musicFile).toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.setAutoPlay(true);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         MediaView mediaView = new MediaView(mediaPlayer);
