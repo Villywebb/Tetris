@@ -738,6 +738,7 @@ public class Tetris extends Application {
                 }
             }));
             tl.setCycleCount(5);
+            timeline.stop();
             tl.playFromStart();
 
             tl.setOnFinished(event -> bom(row));
@@ -747,6 +748,8 @@ public class Tetris extends Application {
     }
 
     public static void com(int row) {
+
+
 
         for (int u = row - 1; u >= 0; u--) {
             for (int y = 0; y < 10; y++) {
@@ -764,6 +767,7 @@ public class Tetris extends Application {
                 }
             }
         }
+        timeline.play();
         redraw();
         checkRow();
     }
