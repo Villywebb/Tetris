@@ -27,11 +27,23 @@ public class Ruta {
         this.label.setFont(Font.font(20));
         label.setLayoutX(x);
         label.setLayoutY(y);
-
-        this.rutan2 = new Rectangle(x,y,35,35);
+        this.rutan2 = new Rectangle(x, y, 35, 35);
         this.rutan2.setViewOrder(1);
         this.rutan2.setFill(Color.TRANSPARENT);
         Tetris.root.getChildren().add(this.rutan2);
+    }
+    public double oldX = this.x;
+    public double getX() {
+        return this.x;
+    }
+
+    public double getOldX(){
+        return this.oldX;
+    }
+    public void setX(double x) {
+        this.x = x;
+        this.rutan.setLayoutX(this.x);
+        this.rutan2.setLayoutX(this.x);
     }
 
     public Rectangle getRect() {

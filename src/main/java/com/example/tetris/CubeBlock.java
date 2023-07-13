@@ -2,8 +2,15 @@ package com.example.tetris;
 
 import java.util.ArrayList;
 
-public class CubeBlock {
+public class CubeBlock implements Block {
     private static ArrayList<int[][]> rotations = new ArrayList<>();
+    private double centerOffset = 35;
+
+    public double getOffset(){
+        return centerOffset;
+    }
+
+
 
     public CubeBlock() {
 

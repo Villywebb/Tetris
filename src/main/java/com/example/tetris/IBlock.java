@@ -2,8 +2,14 @@ package com.example.tetris;
 
 import java.util.ArrayList;
 
-public class IBlock {
+public class IBlock implements Block{
     private static ArrayList<int[][]> rotations = new ArrayList<int[][]>();
+    private double centerOffset = 0;
+
+    public double getOffset(){
+        return centerOffset;
+    }
+
 
     public IBlock() {
 
