@@ -551,8 +551,11 @@ public class Tetris extends Application {
     static void clearNextBlockRender() {
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 4; j++) {
-
+                System.out.println(nextGrid[i][j].oldX +" - "+ nextGrid[i][j].y);
                 nextGrid[i][j].setX(nextGrid[i][j].getOldX());
+
+
+
                 nextIntGrid[i][j] = 0;
                 nextGrid[i][j].setColor(Color.TRANSPARENT);
 
@@ -608,13 +611,13 @@ public class Tetris extends Application {
             }
         }
 
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 15; i >= 0; i--) {
+            for (int j = 3; j >= 0; j--) {
                 if (nextIntGrid[i][j] == 1) {
-                    nextGrid[i][j].setX(nextGrid[i][j].getX() + (blocks[nextTetrisNum3].getOffset()/3));
+                    nextGrid[i][j].setX(nextGrid[i][j].getX() + blocks[nextTetrisNum].getOffset());
                 }
                 if (nextIntGrid[i][j] == 2) {
-                    nextGrid[i][j].setX(nextGrid[i][j].getX() + (blocks[nextTetrisNum3].getOffset()/2));
+                    nextGrid[i][j].setX(nextGrid[i][j].getX() + blocks[nextTetrisNum2].getOffset());
                 }
                 if (nextIntGrid[i][j] == 3) {
                     nextGrid[i][j].setX(nextGrid[i][j].getX() + blocks[nextTetrisNum3].getOffset());

@@ -10,7 +10,7 @@ import javafx.scene.text.Font;
 public class Ruta {
     private Color color;
     private double x;
-    private double y;
+    public double y;
     private Rectangle rutan;
     private Rectangle rutan2;
     private Label label;
@@ -42,8 +42,8 @@ public class Ruta {
     }
     public void setX(double x) {
         this.x = x;
-        this.rutan.setLayoutX(this.x);
-        this.rutan2.setLayoutX(this.x);
+        this.rutan.setLayoutX(x);
+        this.rutan2.setLayoutX(x);
     }
 
     public Rectangle getRect() {
