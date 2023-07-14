@@ -67,7 +67,7 @@ public class Tetris extends Application {
     static Label linesLabel;
     static HashMap<Integer, Integer> sentBlocks = new HashMap<>();
     static HashMap<Integer, Integer> ll = new HashMap<>();
-    static double speed = 150;
+    static double speed = 200;
     static int hcount = 0;
     Slider volumeSlider = new Slider();
 
@@ -88,10 +88,8 @@ public class Tetris extends Application {
 
 
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                                Number old_val, Number new_val) {
-                if (volumeSlider.isFocused())
-                    root.requestFocus();
+            public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
+                if (volumeSlider.isFocused()) root.requestFocus();
 
                 mediaPlayer.setVolume(volumeSlider.getValue() / 100);
             }
@@ -548,14 +546,12 @@ public class Tetris extends Application {
         return false;
     }
 
+    //TODO: fix
     static void clearNextBlockRender() {
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 4; j++) {
-                System.out.println(nextGrid[i][j].oldX +" - "+ nextGrid[i][j].y);
-                nextGrid[i][j].setX(nextGrid[i][j].getOldX());
 
-
-
+                nextGrid[i][j].setX(0);
                 nextIntGrid[i][j] = 0;
                 nextGrid[i][j].setColor(Color.TRANSPARENT);
 
@@ -564,6 +560,7 @@ public class Tetris extends Application {
     }
 
     public static void renderNextBlock(int num) {
+        int next = 0;
         int[][] toPrint = new int[0][];
         int y = 0;
         int x = 0;
@@ -573,14 +570,17 @@ public class Tetris extends Application {
         switch (num) {
             case 1:
                 toPrint = toPrint(nextTetrisNum, 0);
+                next = nextTetrisNum;
                 break;
             case 2:
                 toPrint = toPrint(nextTetrisNum2, 0);
+                next = nextTetrisNum2;
                 u = 4;
                 h = 4;
                 break;
             case 3:
                 toPrint = toPrint(nextTetrisNum3, 0);
+                next = nextTetrisNum3;
                 u = 8;
                 h = 8;
                 break;
@@ -599,34 +599,24 @@ public class Tetris extends Application {
         }
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 4; j++) {
-                if (nextIntGrid[i][j] == 1) {
-                    nextGrid[i][j].setColor(blockColors[nextTetrisNum]);
-                }
-                if (nextIntGrid[i][j] == 2) {
-                    nextGrid[i][j].setColor(blockColors[nextTetrisNum2]);
-                }
-                if (nextIntGrid[i][j] == 3) {
-                    nextGrid[i][j].setColor(blockColors[nextTetrisNum3]);
-                }
-            }
-        }
-
-        for (int i = 15; i >= 0; i--) {
-            for (int j = 3; j >= 0; j--) {
-                if (nextIntGrid[i][j] == 1) {
-                    nextGrid[i][j].setX(nextGrid[i][j].getX() + blocks[nextTetrisNum].getOffset());
-                }
-                if (nextIntGrid[i][j] == 2) {
-                    nextGrid[i][j].setX(nextGrid[i][j].getX() + blocks[nextTetrisNum2].getOffset());
-                }
-                if (nextIntGrid[i][j] == 3) {
-                    nextGrid[i][j].setX(nextGrid[i][j].getX() + blocks[nextTetrisNum3].getOffset());
+                if (nextIntGrid[i][j] == num) {
+                    nextGrid[i][j].setColor(blockColors[next]);
                 }
             }
         }
 
 
-    }
+        //TODO: fix
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (nextIntGrid[i][j] == num) {
+                    nextGrid[i][j].setX(nextGrid[i][j].getX() + blocks[next].getOffset());
+
+            }
+        }
+
+
+    }}
 
 
     static int nextTetrisNum2;
@@ -709,6 +699,7 @@ public class Tetris extends Application {
         }
         return toPrint;
     }
+
     //returns i coord of filled row -1 if no row filled
     static int rowFilledCount = 0;
 
@@ -800,6 +791,7 @@ public class Tetris extends Application {
         t.playFromStart();
         t.setOnFinished(event -> com(row));
     }
+
     public static int[] upperLeft(int i, int j, int oldRotate) {
         int förskjutningFrånFörstFunnaBlockDeliJLed = 0;
         int förskjutningFrånFörstFunnaBlockDeliILed = 0;
@@ -1075,27 +1067,6 @@ public class Tetris extends Application {
         nextRect.setViewOrder(1000);
         root.getChildren().add(nextRect);
 
-
-        for (int i = 0; i < 5; i++) {
-            Line line = new Line();
-            line.setViewOrder(-1);
-            line.setStrokeWidth(3);
-            line.setStartX(585 + 35 * i);
-            line.setStartY(55);
-            line.setEndX(585 + 35 * i);
-            line.setEndY(50 + 11 * 35);
-            root.getChildren().add(line);
-        }
-        for (int i = 0; i < 12; i++) {
-            Line line = new Line();
-            line.setViewOrder(-1);
-            line.setStrokeWidth(3);
-            line.setStartY(55 + 35 * i);
-            line.setStartX(585);
-            line.setEndY(55 + 35 * i);
-            line.setEndX(585 + 4 * 35);
-            root.getChildren().add(line);
-        }
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 holdGrid[i][j] = new Ruta(Color.TRANSPARENT, 25 + 35 * j, 55 + 35 * i, 0);

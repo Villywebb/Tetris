@@ -1,19 +1,18 @@
 package com.example.tetris;
 
 import javafx.scene.control.Label;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
 public class Ruta {
+    public double y;
+    public double oldX;
     private Color color;
     private double x;
-    public double y;
     private Rectangle rutan;
     private Rectangle rutan2;
-    private Label label;
+    private final Label label;
 
     public Ruta(Color color, double x, double y, int num) {
         this.color = color;
@@ -25,25 +24,27 @@ public class Ruta {
         this.rutan.setFill(Color.TRANSPARENT);
         this.label = new Label(" " + num);
         this.label.setFont(Font.font(20));
-        label.setLayoutX(x);
-        label.setLayoutY(y);
-        this.rutan2 = new Rectangle(x, y, 35, 35);
+        this.label.setLayoutX(x);
+        this.label.setLayoutY(y);
+        this.rutan2 = new Rectangle(x, y, 30, 30);
         this.rutan2.setViewOrder(1);
         this.rutan2.setFill(Color.TRANSPARENT);
         Tetris.root.getChildren().add(this.rutan2);
+        oldX = x;
     }
-    public double oldX = this.x;
+
     public double getX() {
         return this.x;
     }
 
-    public double getOldX(){
-        return this.oldX;
-    }
     public void setX(double x) {
         this.x = x;
-        this.rutan.setLayoutX(x);
-        this.rutan2.setLayoutX(x);
+        this.rutan.setLayoutX(this.x);
+        this.rutan2.setLayoutX(this.x);
+    }
+
+    public double getOldX() {
+        return this.oldX;
     }
 
     public Rectangle getRect() {
@@ -52,6 +53,14 @@ public class Ruta {
 
     public Label getLabel() {
         return this.label;
+    }
+
+    public void setNum(int num) {
+        this.label.setText(" " + num);
+    }
+
+    public Color getColor() {
+        return this.color;
     }
 
     public void setColor(Color color) {
@@ -65,13 +74,5 @@ public class Ruta {
             this.rutan.setStroke(Color.TRANSPARENT);
             this.rutan2.setFill(Color.TRANSPARENT);
         }
-    }
-
-    public void setNum(int num) {
-        this.label.setText(" " + num);
-    }
-
-    public Color getColor() {
-        return this.color;
     }
 }
