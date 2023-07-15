@@ -5,8 +5,12 @@ import java.util.ArrayList;
 public class IBlock implements Block{
     private static ArrayList<int[][]> rotations = new ArrayList<int[][]>();
     private double centerOffset = 0;
+    private double yoff = -17.5;
+    public double getOffsetY(){
+        return yoff;
+    }
 
-    public double getOffset(){
+    public double getOffsetX(){
         return centerOffset;
     }
 

@@ -226,6 +226,8 @@ public class Tetris extends Application {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 holdIntGrid[i][j] = 0;
+                holdGrid[i][j].setX(0);
+                holdGrid[i][j].setY(0);
                 holdGrid[i][j].setColor(Color.TRANSPARENT);
             }
         }
@@ -264,6 +266,15 @@ public class Tetris extends Application {
                 }
             }
         }
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (holdIntGrid[i][j] == 1) {
+                    holdGrid[i][j].setX(holdGrid[i][j].getX() + blocks[blo].getOffsetX());
+                    holdGrid[i][j].setY(holdGrid[i][j].getY() + blocks[blo].getOffsetY());
+                }
+            }
+        }
+
 
         //switch, hold full
         if (holdBlockNum != -1) {
@@ -552,6 +563,7 @@ public class Tetris extends Application {
             for (int j = 0; j < 4; j++) {
 
                 nextGrid[i][j].setX(0);
+                nextGrid[i][j].setY(0);
                 nextIntGrid[i][j] = 0;
                 nextGrid[i][j].setColor(Color.TRANSPARENT);
 
@@ -605,13 +617,11 @@ public class Tetris extends Application {
             }
         }
 
-
-        //TODO: fix
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 4; j++) {
                 if (nextIntGrid[i][j] == num) {
-                    nextGrid[i][j].setX(nextGrid[i][j].getX() + blocks[next].getOffset());
-
+                    nextGrid[i][j].setX(nextGrid[i][j].getX() + blocks[next].getOffsetX());
+                    nextGrid[i][j].setY(nextGrid[i][j].getY() + blocks[next].getOffsetY());
             }
         }
 
@@ -732,7 +742,7 @@ public class Tetris extends Application {
         int row = rowFilled();
         if (row != -1) {
 
-            tl = new Timeline(new KeyFrame(Duration.millis(60), new EventHandler<ActionEvent>() {
+            tl = new Timeline(new KeyFrame(Duration.millis(45), new EventHandler<ActionEvent>() {
                 private int i = 4;
                 private int j = 5;
 
@@ -782,7 +792,7 @@ public class Tetris extends Application {
         for (int i = 0; i < 10; i++) {
             intGrid[row][i] = 0;
         }
-        t = new Timeline(new KeyFrame(Duration.millis(250), new EventHandler<ActionEvent>() {
+        t = new Timeline(new KeyFrame(Duration.millis(150), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent evnt) {
             }
@@ -1057,13 +1067,15 @@ public class Tetris extends Application {
         }
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 4; j++) {
-                nextGrid[i][j] = new Ruta(Color.TRANSPARENT, 585 + 35 * j, 55 + 35 * i, 0);
+                nextGrid[i][j] = new Ruta(Color.TRANSPARENT, 585 + 35 * j, 73 + 35 * i, 0);
                 root.getChildren().add(nextGrid[i][j].getRect());
             }
         }
 
-        Rectangle nextRect = new Rectangle(585, 55, 140, 11 * 35);
+        Rectangle nextRect = new Rectangle(577, 55, 156, 11 * 35+10);
         nextRect.setFill(Color.rgb(25, 25, 25));
+        nextRect.setStroke(Color.BLACK);
+        nextRect.setStrokeWidth(5);
         nextRect.setViewOrder(1000);
         root.getChildren().add(nextRect);
 
@@ -1074,28 +1086,13 @@ public class Tetris extends Application {
             }
         }
 
-        Rectangle holdRect = new Rectangle(25, 55, 4 * 35, 4 * 35);
+        Rectangle holdRect = new Rectangle(20, 55, 4 * 35 + 10, 4 * 35 +10);
         holdRect.setFill(Color.rgb(25, 25, 25));
+        holdRect.setStroke(Color.BLACK);
+        holdRect.setStrokeWidth(5);
         holdRect.setViewOrder(1000);
         root.getChildren().add(holdRect);
-        for (int i = 0; i < 5; i++) {
-            Line line = new Line();
-            line.setViewOrder(-1);
-            line.setStrokeWidth(3);
-            line.setStartX(25 + 35 * i);
-            line.setStartY(55);
-            line.setEndX(25 + 35 * i);
-            line.setEndY(55 + 4 * 35);
-            root.getChildren().add(line);
-            Line line2 = new Line();
-            line2.setViewOrder(-1);
-            line2.setStrokeWidth(3);
-            line2.setStartX(25);
-            line2.setStartY(55 + 35 * i);
-            line2.setEndX(25 + 35 * 4);
-            line2.setEndY(55 + i * 35);
-            root.getChildren().add(line2);
-        }
+
     }
 
     public static void redraw() {

@@ -6,7 +6,11 @@ public class CubeBlock implements Block {
     private static ArrayList<int[][]> rotations = new ArrayList<>();
     private double centerOffset = 35;
 
-    public double getOffset(){
+    private double yoff = 0;
+    public double getOffsetY(){
+        return yoff;
+    }
+    public double getOffsetX(){
         return centerOffset;
     }
 

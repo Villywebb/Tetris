@@ -4,10 +4,13 @@ import java.util.ArrayList;
 
 public class TBlock implements Block {
     private static ArrayList<int[][]> rotations = new ArrayList<int[][]>();
-
+    private double yoff = 0;
+    public double getOffsetY(){
+        return yoff;
+    }
     private double centerOffset = 17.5;
 
-    public double getOffset(){
+    public double getOffsetX(){
         return centerOffset;
     }
 

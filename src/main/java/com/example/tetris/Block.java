@@ -3,7 +3,7 @@ package com.example.tetris;
 public interface Block {
 
 
-   double getOffset();
-
+   double getOffsetX();
+   double getOffsetY();
 
 }
