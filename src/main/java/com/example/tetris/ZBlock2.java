@@ -2,8 +2,18 @@ package com.example.tetris;
 
 import java.util.ArrayList;
 
-public class ZBlock2 {
+public class ZBlock2 implements Block {
     private static ArrayList<int[][]> rotations = new ArrayList<int[][]>();
+    private double centerOffset = 17.5;
+
+    private double yoff = 0;
+    public double getOffsetY(){
+        return yoff;
+    }
+    public double getOffsetX(){
+        return centerOffset;
+    }
+
 
     public ZBlock2() {
 

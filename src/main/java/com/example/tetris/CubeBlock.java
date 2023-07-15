@@ -2,8 +2,19 @@ package com.example.tetris;
 
 import java.util.ArrayList;
 
-public class CubeBlock {
+public class CubeBlock implements Block {
     private static ArrayList<int[][]> rotations = new ArrayList<>();
+    private double centerOffset = 35;
+
+    private double yoff = 0;
+    public double getOffsetY(){
+        return yoff;
+    }
+    public double getOffsetX(){
+        return centerOffset;
+    }
+
+
 
     public CubeBlock() {
 
