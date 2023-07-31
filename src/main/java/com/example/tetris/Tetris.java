@@ -134,7 +134,7 @@ public class Tetris extends Application {
         if (newgame)
             root.getChildren().addAll(scoreL, linesL, levelL);
         songPlayer();
-        if(newgame){
+        if (newgame) {
             linesLabel = new Label("0");
             scoreLabel = new Label("0");
             levelLabel = new Label("0");
@@ -533,6 +533,15 @@ public class Tetris extends Application {
     }
 
     public static void menu() {
+        HighScore highScore = new HighScore();
+        if (highScore.isTop5(score)) {
+            //TODO: adsksk
+            //ask for name
+            highScore.addScore(new Score(score, "Vilmer"));
+        } else {
+            highScore.addScore(new Score(score, "-----"));
+        }
+
         restart = new Button("Restart");
         root.getChildren().add(restart);
         restart.setOnAction(new EventHandler<ActionEvent>() {
@@ -613,8 +622,8 @@ public class Tetris extends Application {
             default:
                 break;
         }
-        if(addScore > 0)
-        System.out.println(addScore);
+        if (addScore > 0)
+            System.out.println(addScore);
         return addScore;
     }
 
