@@ -9,17 +9,18 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,21 +33,12 @@ import static javafx.scene.input.KeyCode.*;
 
 public class Tetris extends Application {
 
-    private static Ruta[][] grid = new Ruta[30][10];
-    private static int[][] intGrid = new int[30][10];
-    private static int[][] rotGrid = new int[30][10];
-    private static int[][] ghostGrid = new int[30][10];
-    private static int[][] holdIntGrid = new int[4][4];
-    private static Ruta[][] holdGrid = new Ruta[4][4];
-    static int[][] nextIntGrid = new int[16][4];
-    static Ruta[][] nextGrid = new Ruta[16][4];
     public final static int gridNumCols = 10;
     public final static int gridNumRows = 20;
-
+    static int[][] nextIntGrid = new int[16][4];
+    static Ruta[][] nextGrid = new Ruta[16][4];
     static Group root = new Group();
-    Scene scene = new Scene(root, 750, 750, Color.rgb(35, 35, 35));
-    int blocksize;
-    ArrayList<Integer> nextFour = new ArrayList<>();
+    static Scene scene = new Scene(root, 750, 750, Color.rgb(35, 35, 35));
     static int tetrisNum = 0;
     static int linestonextlevel = 5;
     static int nextTetrisNum;
@@ -57,11 +49,9 @@ public class Tetris extends Application {
     static Label levelLabel;
     static int score = 0;
     static Block[] blocks = new Block[]{new LBlock1(), new LBlock2(), new IBlock(), new CubeBlock(), new TBlock(), new ZBlock1(), new ZBlock2()};
-
     static Color[] blockColors = new Color[]{Color.ORANGE, Color.BLUE, Color.CYAN, Color.YELLOW, Color.PURPLE, Color.GREEN, Color.RED};
-
     static int numBlocks = 1;
-    int frame = 0;
+    static int frame = 0;
     static Timeline timeline;
     static int oldRotate;
     static Label linesLabel;
@@ -69,12 +59,42 @@ public class Tetris extends Application {
     static HashMap<Integer, Integer> ll = new HashMap<>();
     static double speed = 200;
     static int hcount = 0;
-    Slider volumeSlider = new Slider();
+    static Slider volumeSlider = new Slider();
+    static Stage stage;
+    static int holdBlockNum = -1;
+    static MediaPlayer mediaPlayer;
+    static Color ghost;
+    static Timeline time;
+    static int counter = 0;
+    static int cycleCount = 160;
+    static Label gameOver;
+    static int nextTetrisNum2;
+    static int nextTetrisNum3;
+    static int nextTetrisNum4;
+    //returns i coord of filled row -1 if no row filled
+    static int rowFilledCount = 0;
+    static Timeline tl;
+    static Timeline t;
+    static Color col = Color.rgb(255, 255, 70);
+    static Button restart;
+    private static Ruta[][] grid = new Ruta[30][10];
+    private static int[][] intGrid = new int[30][10];
+    private static int[][] rotGrid = new int[30][10];
+    private static int[][] ghostGrid = new int[30][10];
+    private static int[][] holdIntGrid = new int[4][4];
+    private static Ruta[][] holdGrid = new Ruta[4][4];
+    int blocksize;
+    ArrayList<Integer> nextFour = new ArrayList<>();
 
-    @Override
-    public void start(Stage stage) throws IOException {
+    static void starten(boolean newgame) {
+
+        System.out.println("Restarting app!");
+
+
         Rectangle rect = new Rectangle(200, 20, 350, 700);
         rect.setFill(Color.rgb(25, 25, 25));
+        rect.setStrokeWidth(5);
+        rect.setStroke(Color.BLACK);
         rect.setViewOrder(1000);
         root.getChildren().add(rect);
 
@@ -94,7 +114,8 @@ public class Tetris extends Application {
                 mediaPlayer.setVolume(volumeSlider.getValue() / 100);
             }
         });
-        root.getChildren().add(volumeSlider);
+        if (newgame)
+            root.getChildren().add(volumeSlider);
         Label scoreL = new Label("SCORE");
         scoreL.setTextFill(Color.GRAY);
         Label levelL = new Label("LEVEL");
@@ -110,26 +131,40 @@ public class Tetris extends Application {
         scoreL.setLayoutY(400 - 130);
         levelL.setLayoutY(490 - 130);
         linesL.setLayoutY(580 - 130);
-        root.getChildren().addAll(scoreL, linesL, levelL);
+        if (newgame)
+            root.getChildren().addAll(scoreL, linesL, levelL);
         songPlayer();
-        linesLabel = new Label("0");
+        if(newgame){
+            linesLabel = new Label("0");
+            scoreLabel = new Label("0");
+            levelLabel = new Label("0");
+        }
+
         linesLabel.setTextFill(Color.GRAY);
         linesLabel.setFont(Font.font(30));
         linesLabel.setLayoutX(40);
         linesLabel.setLayoutY(620 - 130);
-        root.getChildren().add(linesLabel);
-        scoreLabel = new Label("0");
+        if (newgame)
+            root.getChildren().add(linesLabel);
+
         scoreLabel.setTextFill(Color.GRAY);
         scoreLabel.setFont(Font.font(30));
         scoreLabel.setLayoutX(40);
         scoreLabel.setLayoutY(440 - 130);
-        root.getChildren().add(scoreLabel);
-        levelLabel = new Label("0");
+        if (newgame)
+            root.getChildren().add(scoreLabel);
+
         levelLabel.setTextFill(Color.GRAY);
         levelLabel.setFont(Font.font(30));
         levelLabel.setLayoutX(40);
         levelLabel.setLayoutY(530 - 130);
-        root.getChildren().add(levelLabel);
+        scoreLabel.setText("0");
+        linesLabel.setText("0");
+        levelLabel.setText("0");
+
+
+        if (newgame)
+            root.getChildren().add(levelLabel);
         ll.put(0, 10);
         ll.put(1, 10);
         ll.put(2, 10);
@@ -166,6 +201,7 @@ public class Tetris extends Application {
                 redraw();
                 ghostPiece();
             }
+
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         Random rand = new Random();
@@ -174,7 +210,7 @@ public class Tetris extends Application {
         nextTetrisNum3 = rand.nextInt(2) + 5;
         drawGrid();
         spawnBlock();
-        stage.setTitle("tetris");
+        stage.setTitle("Tetris Game");
         stage.setScene(scene);
         stage.show();
         redraw();
@@ -215,9 +251,7 @@ public class Tetris extends Application {
 
     }
 
-    int holdBlockNum = -1;
-
-    public void holdPiece() {
+    public static void holdPiece() {
         int blo = tetrisNum;
         //puts current piece in holdGrid, spawns next piece
         //if piece alr in hold switch place; holdpiece becomes current, current becomes holdPiece
@@ -281,8 +315,6 @@ public class Tetris extends Application {
             //spawns current block in hold and turns tetromino into holdblock
             spawnBlock(holdBlockNum);
             holdBlockNum = blo;
-            System.out.println(holdBlockNum);
-
         }
         //hold is empty
         else {
@@ -297,19 +329,16 @@ public class Tetris extends Application {
         spawnBlock(-1);
     }
 
-    MediaPlayer mediaPlayer;
-
-    public void songPlayer() {
+    public static void songPlayer() {
         String musicFile = "src/main/resources/com/example/tetris/Tetris.mp3";
         Media sound = new Media(new File(musicFile).toURI().toString());
         mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.setAutoPlay(true);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         MediaView mediaView = new MediaView(mediaPlayer);
+
         root.getChildren().add(mediaView);
     }
-
-    static Color ghost;
 
     public static void ghostPiece() {
         for (int i = 0; i < 30; i++) {
@@ -411,7 +440,6 @@ public class Tetris extends Application {
         }
     }
 
-
     private static void moveDown(int mode, int hard) {
 
         if (mode == 1) {
@@ -458,10 +486,6 @@ public class Tetris extends Application {
         }
     }
 
-    static Timeline time;
-    static int counter = 0;
-    static int cycleCount = 160;
-
     public static void timer(int cycleCount) {
         if (counter == 0) {
 
@@ -475,12 +499,10 @@ public class Tetris extends Application {
         time.setOnFinished(actionEvent -> handleDown());
     }
 
-
     public static void handleDown() {
         if (!gameOver()) {
             hardDown(1);
             checkRow();
-
 
             counter = 0;
 
@@ -495,7 +517,12 @@ public class Tetris extends Application {
             spawnBlock();
         } else {
             //game over
-            Label gameOver = new Label("GAME OVER");
+
+
+            //TODO: handle gameover
+
+            menu();
+            gameOver = new Label("GAME OVER");
             gameOver.setLayoutX(50);
             gameOver.setLayoutY(300);
             gameOver.setFont(Font.font("Arial Black", 50));
@@ -505,14 +532,63 @@ public class Tetris extends Application {
         }
     }
 
+    public static void menu() {
+        restart = new Button("Restart");
+        root.getChildren().add(restart);
+        restart.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                cleanUp();
+                starten(false);
+            }
+        });
+    }
+
+    public static void cleanUp() {
+
+        score = 0;
+        totLinesCleared = 0;
+        level = 0;
+        cycleCount = 160;
+        counter = 0;
+        linestonextlevel = 5;
+        speed = 200;
+
+        for (int i = 0; i < 30; i++) {
+            for (int j = 0; j < 10; j++) {
+                intGrid[i][j] = 0;
+            }
+        }
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 4; j++) {
+                nextIntGrid[i][j] = 0;
+                nextGrid[i][j].setColor(Color.TRANSPARENT);
+                nextGrid[i][j].setX(0);
+                nextGrid[i][j].setY(0);
+            }
+        }
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                holdIntGrid[i][j] = 0;
+                holdGrid[i][j].setColor(Color.TRANSPARENT);
+                holdGrid[i][j].setX(0);
+                holdGrid[i][j].setY(0);
+            }
+
+        }
+        redraw();
+
+        mediaPlayer.stop();
+        restart.setVisible(false);
+        restart.setDisable(true);
+        gameOver.setVisible(false);
+    }
+
     public static int calcScore() {
-        System.out.println(rowFilledCount);
         linestonextlevel -= rowFilledCount;
         if (linestonextlevel <= 0) {
             level++;
             speed = speed - 10;
-
-
             levelLabel.setText("" + level);
             linestonextlevel = ll.get(level);
         }
@@ -537,11 +613,14 @@ public class Tetris extends Application {
             default:
                 break;
         }
+        if(addScore > 0)
+        System.out.println(addScore);
         return addScore;
     }
 
     static void updateScore() {
         score += calcScore();
+        System.out.println(score);
         scoreLabel.setText("" + score);
         rowFilledCount = 0;
     }
@@ -557,7 +636,6 @@ public class Tetris extends Application {
         return false;
     }
 
-    //TODO: fix
     static void clearNextBlockRender() {
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 4; j++) {
@@ -622,16 +700,12 @@ public class Tetris extends Application {
                 if (nextIntGrid[i][j] == num) {
                     nextGrid[i][j].setX(nextGrid[i][j].getX() + blocks[next].getOffsetX());
                     nextGrid[i][j].setY(nextGrid[i][j].getY() + blocks[next].getOffsetY());
+                }
             }
+
+
         }
-
-
-    }}
-
-
-    static int nextTetrisNum2;
-    static int nextTetrisNum3;
-    static int nextTetrisNum4;
+    }
 
     public static void spawnBlock(int spawnNum) {
         hcount = 0;
@@ -675,7 +749,7 @@ public class Tetris extends Application {
 
         redraw();
         ghostPiece();
-        timeline.play();
+        timeline.playFromStart();
 
     }
 
@@ -705,13 +779,10 @@ public class Tetris extends Application {
                 break;
 
             default:
-                System.out.println("wlak");
+
         }
         return toPrint;
     }
-
-    //returns i coord of filled row -1 if no row filled
-    static int rowFilledCount = 0;
 
     public static int rowFilled() {
         boolean isFilled;
@@ -734,9 +805,6 @@ public class Tetris extends Application {
         }
         return -1;
     }
-
-    static Timeline tl;
-    static Timeline t;
 
     public static void checkRow() {
         int row = rowFilled();
@@ -764,8 +832,6 @@ public class Tetris extends Application {
         }
     }
 
-    static Color col = Color.rgb(255, 255, 70);
-
     public static void com(int row) {
         for (int u = row - 1; u >= 0; u--) {
             for (int y = 0; y < 10; y++) {
@@ -785,10 +851,13 @@ public class Tetris extends Application {
         }
         timeline.play();
         redraw();
+        ghostPiece();
         checkRow();
     }
 
     static void bom(int row) {
+        redraw();
+        ghostPiece();
         for (int i = 0; i < 10; i++) {
             intGrid[row][i] = 0;
         }
@@ -797,6 +866,7 @@ public class Tetris extends Application {
             public void handle(ActionEvent evnt) {
             }
         }));
+
         t.setCycleCount(1);
         t.playFromStart();
         t.setOnFinished(event -> com(row));
@@ -1038,7 +1108,6 @@ public class Tetris extends Application {
 
     }
 
-
     public static void drawGrid() {
         for (int i = 0; i < gridNumCols + 1; i++) {
             Line line = new Line();
@@ -1072,7 +1141,7 @@ public class Tetris extends Application {
             }
         }
 
-        Rectangle nextRect = new Rectangle(577, 55, 156, 11 * 35+10);
+        Rectangle nextRect = new Rectangle(577, 55, 156, 11 * 35 + 10);
         nextRect.setFill(Color.rgb(25, 25, 25));
         nextRect.setStroke(Color.BLACK);
         nextRect.setStrokeWidth(5);
@@ -1086,7 +1155,7 @@ public class Tetris extends Application {
             }
         }
 
-        Rectangle holdRect = new Rectangle(20, 55, 4 * 35 + 10, 4 * 35 +10);
+        Rectangle holdRect = new Rectangle(20, 55, 4 * 35 + 10, 4 * 35 + 10);
         holdRect.setFill(Color.rgb(25, 25, 25));
         holdRect.setStroke(Color.BLACK);
         holdRect.setStrokeWidth(5);
@@ -1120,8 +1189,13 @@ public class Tetris extends Application {
 
     }
 
-
     public static void main(String[] args) {
         launch();
+    }
+
+    @Override
+    public void start(Stage s) throws IOException {
+        stage = new Stage();
+        starten(true);
     }
 }
