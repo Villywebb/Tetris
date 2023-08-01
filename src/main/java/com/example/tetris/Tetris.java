@@ -9,9 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -77,6 +75,7 @@ public class Tetris extends Application {
     static Timeline t;
     static Color col = Color.rgb(255, 255, 70);
     static Button restart;
+    static TextArea top5Scores = new TextArea();
     private static Ruta[][] grid = new Ruta[30][10];
     private static int[][] intGrid = new int[30][10];
     private static int[][] rotGrid = new int[30][10];
@@ -134,7 +133,7 @@ public class Tetris extends Application {
         if (newgame)
             root.getChildren().addAll(scoreL, linesL, levelL);
         songPlayer();
-        if(newgame){
+        if (newgame) {
             linesLabel = new Label("0");
             scoreLabel = new Label("0");
             levelLabel = new Label("0");
@@ -330,7 +329,7 @@ public class Tetris extends Application {
     }
 
     public static void songPlayer() {
-        String musicFile = "src/main/resources/com/example/tetris/Tetris.mp3";
+        String musicFile = "src/main/resources/com/example/tetris/TETRIS PHONK.mp3";
         Media sound = new Media(new File(musicFile).toURI().toString());
         mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.setAutoPlay(true);
@@ -523,8 +522,8 @@ public class Tetris extends Application {
 
             menu();
             gameOver = new Label("GAME OVER");
-            gameOver.setLayoutX(50);
-            gameOver.setLayoutY(300);
+            gameOver.setLayoutX(200);
+            gameOver.setLayoutY(100);
             gameOver.setFont(Font.font("Arial Black", 50));
             gameOver.setTextFill(Color.RED);
             root.getChildren().add(gameOver);
@@ -533,15 +532,72 @@ public class Tetris extends Application {
     }
 
     public static void menu() {
+
+        HighScore highScore = new HighScore();
+
+        top5(highScore, true);
+
+
+        if (highScore.isTop1(score)) {
+            // newHigh.setText("NEW HIGH SCORE!");
+        }
+        if (highScore.isTop5(score)) {
+            Group nameRoot = new Group();
+            Stage nameStage = new Stage();
+            Scene nameScene = new Scene(nameRoot, 300, 130);
+            nameStage.setScene(nameScene);
+            nameStage.setTitle("NEW HIGHSCORE!");
+            Label highScoreLbl = new Label("NEW HIGHSCORE! You scored: " + score);
+            TextField nameInput = new TextField();
+            nameInput.setPromptText("Name");
+            nameInput.setLayoutY(50);
+            Button enterName = new Button("Enter");
+            enterName.setLayoutY(100);
+            enterName.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    highScore.addScore(new Score(score, nameInput.getText().toUpperCase()));
+                    nameStage.hide();
+                    top5(highScore, false);
+                }
+            });
+
+            nameRoot.getChildren().addAll(highScoreLbl, nameInput, enterName);
+            nameStage.show();
+
+        } else {
+            highScore.addScore(new Score(score, "-----"));
+        }
+
         restart = new Button("Restart");
         root.getChildren().add(restart);
         restart.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                root.getChildren().remove(top5Scores);
                 cleanUp();
                 starten(false);
             }
         });
+    }
+
+    public static void top5(HighScore highScore, Boolean first) {
+
+        top5Scores.setLayoutX(750 / 4);
+        top5Scores.setLayoutY(750 / 2);
+        top5Scores.setPrefHeight(250);
+        top5Scores.setPrefWidth(750 / 2);
+        top5Scores.setEditable(false);
+        top5Scores.setFont(Font.font("Arial Black", 25));
+        String text = "";
+        if (first)
+            root.getChildren().add(top5Scores);
+        for (Score s : highScore.getTop5()) {
+            text += s.getScore() + " - " + s.getName();
+            text += "\n";
+        }
+        top5Scores.setText(text);
+
     }
 
     public static void cleanUp() {
@@ -588,7 +644,7 @@ public class Tetris extends Application {
         linestonextlevel -= rowFilledCount;
         if (linestonextlevel <= 0) {
             level++;
-            speed = speed - 10;
+            speed = speed - 20;
             levelLabel.setText("" + level);
             linestonextlevel = ll.get(level);
         }
@@ -613,8 +669,8 @@ public class Tetris extends Application {
             default:
                 break;
         }
-        if(addScore > 0)
-        System.out.println(addScore);
+        if (addScore > 0)
+            System.out.println(addScore);
         return addScore;
     }
 
