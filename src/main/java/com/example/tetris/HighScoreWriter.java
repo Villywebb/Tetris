@@ -16,7 +16,7 @@ public class HighScoreWriter {
         BufferedWriter bw = new BufferedWriter(fw);
         final String formatTemplate = "{0},{1}";
         for (Score s : scores) {
-            String lineString = MessageFormat.format(formatTemplate,s.getScore(),s.getName());
+            String lineString = MessageFormat.format(formatTemplate,String.valueOf(s.getScore()),s.getName());
             bw.write(lineString);
             bw.newLine();
         }
