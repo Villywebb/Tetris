@@ -37,7 +37,7 @@ public class HighScore {
         ArrayList<Score> top5 = new ArrayList<>();
         Collections.sort(scores, new ScoreComparator());
         if (scores.size() >= 5) {
-            for (int i = scores.size(); i > scores.size() - 5; i--) {
+            for (int i = scores.size()-1; i >= scores.size() - 5; i--) {
                 top5.add(scores.get(i));
             }
             return top5;
@@ -54,5 +54,13 @@ public class HighScore {
             }
         }
         return count < 5;
+    }
+    public Boolean isTop1(int score) {
+        for (Score s : scores) {
+            if (s.getScore() > score) {
+                return false;
+            }
+        }
+        return true;
     }
 }
