@@ -24,7 +24,7 @@ public class Ruta {
         this.color = color;
         this.x = x;
         this.y = y;
-        this.rutan = new Rectangle(x+7.5, y+7.5, 20, 20);
+        this.rutan = new Rectangle(x+8.5, y+8.5, 18, 18);
         this.border = new Rectangle(x, y, 35, 35);
         border.setFill(Color.TRANSPARENT);
         border.setViewOrder(0);
@@ -61,9 +61,9 @@ public class Ruta {
                 x+35, y+35,
                 x+17.5, y+17.5);
         top.setFill(color.darker());
-        mid1.setFill(color.darker().darker());
-        mid2.setFill(color.darker().darker());
-        bot.setFill(color.darker().darker().darker());
+        mid1.setFill(color.darker().darker().darker());
+        mid2.setFill(color.darker().darker().darker());
+        bot.setFill(color.darker().darker().darker().darker());
         top.setViewOrder(1);
         mid1.setViewOrder(1);
         mid2.setViewOrder(1);

@@ -69,7 +69,6 @@ public class Tetris extends Application {
     static int nextTetrisNum2;
     static int nextTetrisNum3;
     static int nextTetrisNum4;
-    //returns i coord of filled row -1 if no row filled
     static int rowFilledCount = 0;
     static Timeline tl;
     static Timeline t;
@@ -86,8 +85,6 @@ public class Tetris extends Application {
     ArrayList<Integer> nextFour = new ArrayList<>();
 
     static void starten(boolean newgame) {
-
-        System.out.println("Restarting app!");
 
 
         Rectangle rect = new Rectangle(200, 20, 350, 700);
@@ -669,14 +666,12 @@ public class Tetris extends Application {
             default:
                 break;
         }
-        if (addScore > 0)
-            System.out.println(addScore);
+
         return addScore;
     }
 
     static void updateScore() {
         score += calcScore();
-        System.out.println(score);
         scoreLabel.setText("" + score);
         rowFilledCount = 0;
     }
