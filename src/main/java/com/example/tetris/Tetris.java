@@ -349,7 +349,7 @@ public class Tetris extends Application {
 
     public static void tetrisDownSound(){
         AudioClip audioClip = new AudioClip(Paths.get("src/main/resources/com/example/tetris/tetris-gb-27-piece-landed.mp3").toUri().toString());
-        audioClip.play(0.6);
+        audioClip.play(0.4);
     }
     public static void tetrisMoveSound(){
         AudioClip audioClip = new AudioClip(Paths.get("src/main/resources/com/example/tetris/tetris-gb-18-move-piece.mp3").toUri().toString());
@@ -603,6 +603,7 @@ public class Tetris extends Application {
                     highScore.addScore(new Score(score, nameInput.getText().toUpperCase()));
                     nameStage.hide();
                     top5(highScore, false);
+                    tetrisMenuSound();
                 }
             });
 
@@ -621,6 +622,7 @@ public class Tetris extends Application {
                 root.getChildren().remove(top5Scores);
                 cleanUp();
                 starten(false);
+                tetrisMenuSound();
             }
         });
     }
