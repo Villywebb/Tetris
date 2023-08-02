@@ -3,8 +3,6 @@ package com.example.tetris;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -22,9 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -77,14 +73,12 @@ public class Tetris extends Application {
     static Color col = Color.rgb(255, 255, 70);
     static Button restart;
     static TextArea top5Scores = new TextArea();
-    private static Ruta[][] grid = new Ruta[30][10];
-    private static int[][] intGrid = new int[30][10];
-    private static int[][] rotGrid = new int[30][10];
-    private static int[][] ghostGrid = new int[30][10];
-    private static int[][] holdIntGrid = new int[4][4];
-    private static Ruta[][] holdGrid = new Ruta[4][4];
-    int blocksize;
-    ArrayList<Integer> nextFour = new ArrayList<>();
+    private static final Ruta[][] grid = new Ruta[30][10];
+    private static final int[][] intGrid = new int[30][10];
+    private static final int[][] rotGrid = new int[30][10];
+    private static final int[][] ghostGrid = new int[30][10];
+    private static final int[][] holdIntGrid = new int[4][4];
+    private static final Ruta[][] holdGrid = new Ruta[4][4];
 
     static void starten(boolean newgame) {
 
@@ -105,12 +99,10 @@ public class Tetris extends Application {
         volumeSlider.setMin(0);
 
 
-        volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
-                if (volumeSlider.isFocused()) root.requestFocus();
+        volumeSlider.valueProperty().addListener((ov, old_val, new_val) -> {
+            if (volumeSlider.isFocused()) root.requestFocus();
 
-                mediaPlayer.setVolume(volumeSlider.getValue() / 100);
-            }
+            mediaPlayer.setVolume(volumeSlider.getValue() / 100);
         });
         if (newgame)
             root.getChildren().add(volumeSlider);
@@ -391,9 +383,7 @@ public class Tetris extends Application {
         }
 
         for (int i = 0; i < 30; i++) {
-            for (int j = 0; j < 10; j++) {
-                ghostGrid[i][j] = intGrid[i][j];
-            }
+            System.arraycopy(intGrid[i], 0, ghostGrid[i], 0, 10);
         }
 
         hardDown(2);
@@ -580,11 +570,7 @@ public class Tetris extends Application {
         HighScore highScore = new HighScore();
 
         top5(highScore, true);
-
-
-        if (highScore.isTop1(score)) {
-            // newHigh.setText("NEW HIGH SCORE!");
-        }
+        
         if (highScore.isTop5(score)) {
             Group nameRoot = new Group();
             Stage nameStage = new Stage();
@@ -597,14 +583,11 @@ public class Tetris extends Application {
             nameInput.setLayoutY(50);
             Button enterName = new Button("Enter");
             enterName.setLayoutY(100);
-            enterName.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent e) {
-                    highScore.addScore(new Score(score, nameInput.getText().toUpperCase()));
-                    nameStage.hide();
-                    top5(highScore, false);
-                    tetrisMenuSound();
-                }
+            enterName.setOnAction(e -> {
+                highScore.addScore(new Score(score, nameInput.getText().toUpperCase()));
+                nameStage.hide();
+                top5(highScore, false);
+                tetrisMenuSound();
             });
 
             nameRoot.getChildren().addAll(highScoreLbl, nameInput, enterName);
@@ -616,33 +599,30 @@ public class Tetris extends Application {
 
         restart = new Button("Restart");
         root.getChildren().add(restart);
-        restart.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                root.getChildren().remove(top5Scores);
-                cleanUp();
-                starten(false);
-                tetrisMenuSound();
-            }
+        restart.setOnAction(e -> {
+            root.getChildren().remove(top5Scores);
+            cleanUp();
+            starten(false);
+            tetrisMenuSound();
         });
     }
 
     public static void top5(HighScore highScore, Boolean first) {
 
-        top5Scores.setLayoutX(750 / 4);
-        top5Scores.setLayoutY(750 / 2);
+        top5Scores.setLayoutX(750.0 / 4);
+        top5Scores.setLayoutY(750.0 / 2);
         top5Scores.setPrefHeight(250);
-        top5Scores.setPrefWidth(750 / 2);
+        top5Scores.setPrefWidth(750.0 / 2);
         top5Scores.setEditable(false);
         top5Scores.setFont(Font.font("Arial Black", 25));
-        String text = "";
+        StringBuilder text = new StringBuilder();
         if (first)
             root.getChildren().add(top5Scores);
         for (Score s : highScore.getTop5()) {
-            text += s.getScore() + " - " + s.getName();
-            text += "\n";
+            text.append(s.getScore()).append(" - ").append(s.getName());
+            text.append("\n");
         }
-        top5Scores.setText(text);
+        top5Scores.setText(text.toString());
 
     }
 
@@ -699,23 +679,15 @@ public class Tetris extends Application {
 
         int addScore = 0;
         switch (rowFilledCount) {
-            case 0:
-                break;
-            case 1:
-                addScore = (level + 1) * 40;
-                break;
-            case 2:
-                addScore = (level + 1) * 100;
-                break;
-            case 3:
-                addScore = (level + 1) * 300;
-                break;
-            case 4:
+            case 1 -> addScore = (level + 1) * 40;
+            case 2 -> addScore = (level + 1) * 100;
+            case 3 -> addScore = (level + 1) * 300;
+            case 4 -> {
                 tetris4LineSound();
                 addScore = (level + 1) * 1200;
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
 
         return addScore;
@@ -760,22 +732,22 @@ public class Tetris extends Application {
         int u = 0;
         int h = 0;
         switch (num) {
-            case 1:
+            case 1 -> {
                 toPrint = toPrint(nextTetrisNum, 0);
                 next = nextTetrisNum;
-                break;
-            case 2:
+            }
+            case 2 -> {
                 toPrint = toPrint(nextTetrisNum2, 0);
                 next = nextTetrisNum2;
                 u = 4;
                 h = 4;
-                break;
-            case 3:
+            }
+            case 3 -> {
                 toPrint = toPrint(nextTetrisNum3, 0);
                 next = nextTetrisNum3;
                 u = 8;
                 h = 8;
-                break;
+            }
         }
 
         while (u < h + toPrint.length) {
@@ -858,30 +830,15 @@ public class Tetris extends Application {
     public static int[][] toPrint(int tetrisNum, int rotate) {
         int[][] toPrint = new int[][]{};
         switch (tetrisNum) {
-            case 0:
-                toPrint = LBlock1.getRotations().get(rotate);
-                break;
-            case 1:
-                toPrint = LBlock2.getRotations().get(rotate);
-                break;
-            case 2:
-                toPrint = IBlock.getRotations().get(rotate);
-                break;
-            case 3:
-                toPrint = CubeBlock.getRotations().get(rotate);
-                break;
-            case 4:
-                toPrint = TBlock.getRotations().get(rotate);
-                break;
-            case 5:
-                toPrint = ZBlock1.getRotations().get(rotate);
-                break;
-            case 6:
-                toPrint = ZBlock2.getRotations().get(rotate);
-                break;
-
-            default:
-
+            case 0 -> toPrint = LBlock1.getRotations().get(rotate);
+            case 1 -> toPrint = LBlock2.getRotations().get(rotate);
+            case 2 -> toPrint = IBlock.getRotations().get(rotate);
+            case 3 -> toPrint = CubeBlock.getRotations().get(rotate);
+            case 4 -> toPrint = TBlock.getRotations().get(rotate);
+            case 5 -> toPrint = ZBlock1.getRotations().get(rotate);
+            case 6 -> toPrint = ZBlock2.getRotations().get(rotate);
+            default -> {
+            }
         }
         return toPrint;
     }
@@ -894,6 +851,7 @@ public class Tetris extends Application {
             for (var col = 0; col < 10; col++) {
                 if (intGrid[row][col] == 0) {
                     isFilled = false;
+                    break;
                 }
             }
             //if isFilled is still true then current row is filled
@@ -912,7 +870,7 @@ public class Tetris extends Application {
         int row = rowFilled();
         if (row != -1) {
 
-            tl = new Timeline(new KeyFrame(Duration.millis(45), new EventHandler<ActionEvent>() {
+            tl = new Timeline(new KeyFrame(Duration.millis(45), new EventHandler<>() {
                 private int i = 4;
                 private int j = 5;
 
@@ -964,10 +922,7 @@ public class Tetris extends Application {
         for (int i = 0; i < 10; i++) {
             intGrid[row][i] = 0;
         }
-        t = new Timeline(new KeyFrame(Duration.millis(150), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent evnt) {
-            }
+        t = new Timeline(new KeyFrame(Duration.millis(150), evnt -> {
         }));
 
         t.setCycleCount(1);
@@ -999,10 +954,10 @@ public class Tetris extends Application {
             case 1:
                 //l2
                 switch (oldRotate) {
-                    case 0 -> förskjutningFrånFörstFunnaBlockDeliILed = 0;
-                    case 1 -> förskjutningFrånFörstFunnaBlockDeliJLed = -1;
+                    case 0 -> {
+                    }
+                    case 1, 3 -> förskjutningFrånFörstFunnaBlockDeliJLed = -1;
                     case 2 -> förskjutningFrånFörstFunnaBlockDeliILed = -1;
-                    case 3 -> förskjutningFrånFörstFunnaBlockDeliJLed = -1;
                 }
                 break;
             case 2:
@@ -1013,7 +968,6 @@ public class Tetris extends Application {
                     case 2 -> förskjutningFrånFörstFunnaBlockDeliILed = -2;
                     case 3 -> förskjutningFrånFörstFunnaBlockDeliJLed = -1;
                 }
-                ;
                 break;
             case 3:
                 //cube
@@ -1021,18 +975,14 @@ public class Tetris extends Application {
             case 4:
                 //tblock
                 switch (oldRotate) {
-                    case 0 -> förskjutningFrånFörstFunnaBlockDeliJLed = -1;
-                    case 1 -> förskjutningFrånFörstFunnaBlockDeliJLed = -1;
+                    case 0, 1, 3 -> förskjutningFrånFörstFunnaBlockDeliJLed = -1;
                     case 2 -> förskjutningFrånFörstFunnaBlockDeliILed = -1;
-                    case 3 -> förskjutningFrånFörstFunnaBlockDeliJLed = -1;
                 }
                 break;
             case 5:
                 //z1
                 switch (oldRotate) {
                     case 0:
-                        förskjutningFrånFörstFunnaBlockDeliJLed = -1;
-                        break;
                     case 1:
                         förskjutningFrånFörstFunnaBlockDeliJLed = -1;
                         break;
@@ -1117,11 +1067,7 @@ public class Tetris extends Application {
         for (int i = upperleft[0]; i < upperleft[0] + toPrint.length; i++) {
             for (int j = upperleft[1]; j < upperleft[1] + toPrint[0].length; j++) {
                 if (toPrint[k][u] == 1) {
-                    if (i >= 0 && j >= 0 && i < 30 && j < 10) {
-                        isValidRotation = true;
-                    } else {
-                        isValidRotation = false;
-                    }
+                    isValidRotation = i >= 0 && j >= 0 && i < 30 && j < 10;
                 }
                 u++;
             }
@@ -1130,8 +1076,6 @@ public class Tetris extends Application {
         }
 
 
-        //bsjdbsjdb
-        //sbdjsdj
         if (upperleft[1] >= 0 && upperleft[1] <= 9) {
             if (isValidRotation) {
 
@@ -1297,7 +1241,7 @@ public class Tetris extends Application {
     }
 
     @Override
-    public void start(Stage s) throws IOException {
+    public void start(Stage s) {
         stage = new Stage();
         starten(true);
     }
