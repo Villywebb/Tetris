@@ -31,6 +31,12 @@ public class Tetris extends Application {
 
     public final static int gridNumCols = 10;
     public final static int gridNumRows = 20;
+    private static final Ruta[][] grid = new Ruta[30][10];
+    private static final int[][] intGrid = new int[30][10];
+    private static final int[][] rotGrid = new int[30][10];
+    private static final int[][] ghostGrid = new int[30][10];
+    private static final int[][] holdIntGrid = new int[4][4];
+    private static final Ruta[][] holdGrid = new Ruta[4][4];
     static int[][] nextIntGrid = new int[16][4];
     static Ruta[][] nextGrid = new Ruta[16][4];
     static Group root = new Group();
@@ -73,12 +79,6 @@ public class Tetris extends Application {
     static Color col = Color.rgb(255, 255, 70);
     static Button restart;
     static TextArea top5Scores = new TextArea();
-    private static final Ruta[][] grid = new Ruta[30][10];
-    private static final int[][] intGrid = new int[30][10];
-    private static final int[][] rotGrid = new int[30][10];
-    private static final int[][] ghostGrid = new int[30][10];
-    private static final int[][] holdIntGrid = new int[4][4];
-    private static final Ruta[][] holdGrid = new Ruta[4][4];
 
     static void starten(boolean newgame) {
 
@@ -216,8 +216,7 @@ public class Tetris extends Application {
                 }
                 if (!rotateBlock(rotate, oldRotate)) {
                     rotate = oldRotate;
-                }
-                else{
+                } else {
                     tetrisRotateSound();
                 }
 
@@ -339,35 +338,42 @@ public class Tetris extends Application {
         root.getChildren().add(mediaView);
     }
 
-    public static void tetrisDownSound(){
+    public static void tetrisDownSound() {
         AudioClip audioClip = new AudioClip(Paths.get("src/main/resources/com/example/tetris/tetris-gb-27-piece-landed.mp3").toUri().toString());
         audioClip.play(0.4);
     }
-    public static void tetrisMoveSound(){
+
+    public static void tetrisMoveSound() {
         AudioClip audioClip = new AudioClip(Paths.get("src/main/resources/com/example/tetris/tetris-gb-18-move-piece.mp3").toUri().toString());
         audioClip.play(0.4);
     }
-    public static void tetrisRotateSound(){
+
+    public static void tetrisRotateSound() {
         AudioClip audioClip = new AudioClip(Paths.get("src/main/resources/com/example/tetris/tetris-gb-19-rotate-piece.mp3").toUri().toString());
         audioClip.play(0.4);
     }
-    public static void tetrisMenuSound(){
+
+    public static void tetrisMenuSound() {
         AudioClip audioClip = new AudioClip(Paths.get("src/main/resources/com/example/tetris/tetris-gb-17-menu-sound.mp3").toUri().toString());
         audioClip.play();
     }
-    public static void tetrisRowSound(){
+
+    public static void tetrisRowSound() {
         AudioClip audioClip = new AudioClip(Paths.get("src/main/resources/com/example/tetris/tetris-gb-21-line-clear.mp3").toUri().toString());
         audioClip.play();
     }
-    public static void tetris4LineSound(){
+
+    public static void tetris4LineSound() {
         AudioClip audioClip = new AudioClip(Paths.get("src/main/resources/com/example/tetris/tetris-gb-22-tetris-4-lines.mp3").toUri().toString());
         audioClip.play();
     }
-    public static void tetrisGameOverSound(){
+
+    public static void tetrisGameOverSound() {
         AudioClip audioClip = new AudioClip(Paths.get("src/main/resources/com/example/tetris/tetris-gb-25-game-over.mp3").toUri().toString());
         audioClip.play();
     }
-    public static void tetrisLevelUpSound(){
+
+    public static void tetrisLevelUpSound() {
         AudioClip audioClip = new AudioClip(Paths.get("src/main/resources/com/example/tetris/tetris-gb-23-level-up-jingle-v1.mp3").toUri().toString());
         audioClip.play();
     }
@@ -521,7 +527,6 @@ public class Tetris extends Application {
     public static void timer(int cycleCount) {
         if (counter == 0) {
             tetrisDownSound();
-            System.out.println("al");
             time = new Timeline(new KeyFrame(Duration.millis(5), (ActionEvent event) -> {
             }));
             time.setCycleCount(cycleCount);
@@ -570,7 +575,7 @@ public class Tetris extends Application {
         HighScore highScore = new HighScore();
 
         top5(highScore, true);
-        
+
         if (highScore.isTop5(score)) {
             Group nameRoot = new Group();
             Stage nameStage = new Stage();
@@ -589,6 +594,15 @@ public class Tetris extends Application {
                 top5(highScore, false);
                 tetrisMenuSound();
             });
+            nameInput.setOnKeyPressed(e -> {
+                if (e.getCode() == ENTER){
+                    highScore.addScore(new Score(score, nameInput.getText().toUpperCase()));
+                    nameStage.hide();
+                    top5(highScore, false);
+                    tetrisMenuSound();
+                }
+            });
+
 
             nameRoot.getChildren().addAll(highScoreLbl, nameInput, enterName);
             nameStage.show();
@@ -598,12 +612,23 @@ public class Tetris extends Application {
         }
 
         restart = new Button("Restart");
+        restart.setPrefWidth(80);
+        restart.setLayoutY(580);
+        restart.setLayoutX((750.0/2) - 40);
         root.getChildren().add(restart);
         restart.setOnAction(e -> {
             root.getChildren().remove(top5Scores);
             cleanUp();
             starten(false);
             tetrisMenuSound();
+        });
+        top5Scores.setOnKeyPressed(e -> {
+            if (e.getCode() == ENTER) {
+                root.getChildren().remove(top5Scores);
+                cleanUp();
+                starten(false);
+                tetrisMenuSound();
+            }
         });
     }
 
