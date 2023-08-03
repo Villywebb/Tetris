@@ -555,9 +555,6 @@ public class Tetris extends Application {
             spawnBlock();
         } else {
             //game over
-
-
-            //TODO: handle gameover
             tetrisGameOverSound();
             menu();
             gameOver = new Label("GAME OVER");
@@ -808,7 +805,6 @@ public class Tetris extends Application {
 
     public static void spawnBlock(int spawnNum) {
         hcount = 0;
-
         rotate = 0;
 
         if (spawnNum == -1) {
@@ -835,8 +831,15 @@ public class Tetris extends Application {
 
         int y = 0;
         int x = 0;
+        int yeah;
+        if(tetrisNum == 3){
+            yeah = 4;
+        }
+        else {
+            yeah = 3;
+        }
         for (int i = 8; i < 8 + toPrint.length; i++) {
-            for (int j = 3; j < 3 + toPrint[0].length; j++) {
+            for (int j = yeah; j < yeah + toPrint[0].length; j++) {
                 if (toPrint[y][x] == 1) {
                     intGrid[i][j] = 1;
                 }
