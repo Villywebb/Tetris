@@ -15,13 +15,13 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Random;
 
 import static javafx.scene.input.KeyCode.*;
@@ -81,8 +81,13 @@ public class Tetris extends Application {
     static TextArea top5Scores = new TextArea();
 
     static void starten(boolean newgame) {
+        top5Scores.setId("top");
 
-
+        gameOver = new Label("GAME OVER");
+        gameOver.setLayoutX(150);
+        gameOver.setLayoutY(100);
+        gameOver.setId("gameOver");
+        gameOver.setVisible(false);
         Rectangle rect = new Rectangle(200, 20, 350, 700);
         rect.setFill(Color.rgb(25, 25, 25));
         rect.setStrokeWidth(5);
@@ -99,6 +104,8 @@ public class Tetris extends Application {
         volumeSlider.setMin(0);
 
 
+
+
         volumeSlider.valueProperty().addListener((ov, old_val, new_val) -> {
             if (volumeSlider.isFocused()) root.requestFocus();
 
@@ -112,9 +119,8 @@ public class Tetris extends Application {
         levelL.setTextFill(Color.GRAY);
         Label linesL = new Label("LINES");
         linesL.setTextFill(Color.GRAY);
-        scoreL.setFont(Font.font(30));
-        levelL.setFont(Font.font(30));
-        linesL.setFont(Font.font(30));
+
+
         scoreL.setLayoutX(30);
         levelL.setLayoutX(30);
         linesL.setLayoutX(30);
@@ -131,21 +137,21 @@ public class Tetris extends Application {
         }
 
         linesLabel.setTextFill(Color.GRAY);
-        linesLabel.setFont(Font.font(30));
+
         linesLabel.setLayoutX(40);
         linesLabel.setLayoutY(620 - 130);
         if (newgame)
             root.getChildren().add(linesLabel);
 
         scoreLabel.setTextFill(Color.GRAY);
-        scoreLabel.setFont(Font.font(30));
+
         scoreLabel.setLayoutX(40);
         scoreLabel.setLayoutY(440 - 130);
         if (newgame)
             root.getChildren().add(scoreLabel);
 
         levelLabel.setTextFill(Color.GRAY);
-        levelLabel.setFont(Font.font(30));
+
         levelLabel.setLayoutX(40);
         levelLabel.setLayoutY(530 - 130);
         scoreLabel.setText("0");
@@ -199,6 +205,8 @@ public class Tetris extends Application {
         nextTetrisNum = rand.nextInt(3);
         nextTetrisNum2 = rand.nextInt(2) + 3;
         nextTetrisNum3 = rand.nextInt(2) + 5;
+
+        scene.getStylesheets().add(Objects.requireNonNull(Tetris.class.getResource("styles.css")).toExternalForm());
         drawGrid();
         spawnBlock();
         stage.setTitle("Tetris Game");
@@ -327,7 +335,7 @@ public class Tetris extends Application {
     }
 
     public static void songPlayer() {
-        String musicFile = "src/main/resources/com/example/tetris/Tetris.mp3";
+        String musicFile = "src/main/resources/com/example/tetris/TETRIS PHONK.mp3";
         Media sound = new Media(new File(musicFile).toURI().toString());
         mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.setVolume(0.35);
@@ -557,11 +565,8 @@ public class Tetris extends Application {
             //game over
             tetrisGameOverSound();
             menu();
-            gameOver = new Label("GAME OVER");
-            gameOver.setLayoutX(200);
-            gameOver.setLayoutY(100);
-            gameOver.setFont(Font.font("Arial Black", 50));
-            gameOver.setTextFill(Color.RED);
+
+            gameOver.setVisible(true);
             root.getChildren().add(gameOver);
             timeline.stop();
         }
@@ -609,9 +614,10 @@ public class Tetris extends Application {
         }
 
         restart = new Button("Restart");
-        restart.setPrefWidth(80);
+        restart.setPrefWidth(130);
+        restart.setPrefHeight(35);
         restart.setLayoutY(580);
-        restart.setLayoutX((750.0/2) - 40);
+        restart.setLayoutX((750.0/2) - 65);
         root.getChildren().add(restart);
         restart.setOnAction(e -> {
             root.getChildren().remove(top5Scores);
@@ -636,12 +642,11 @@ public class Tetris extends Application {
         top5Scores.setPrefHeight(250);
         top5Scores.setPrefWidth(750.0 / 2);
         top5Scores.setEditable(false);
-        top5Scores.setFont(Font.font("Arial Black", 25));
         StringBuilder text = new StringBuilder();
         if (first)
             root.getChildren().add(top5Scores);
         for (Score s : highScore.getTop5()) {
-            text.append(s.getScore()).append(" - ").append(s.getName());
+            text.append(s.getScore()).append("-").append(s.getName());
             text.append("\n");
         }
         top5Scores.setText(text.toString());

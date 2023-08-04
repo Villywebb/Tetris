@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+
+.label{
+     -fx-text-fill: #a8a8a8;
+    -fx-font-size: 25;
+    -fx-font-family: 'Press Start 2P', cursive;
+
+}
+#gameOver{
+    -fx-text-fill:red;
+    -fx-font-size: 50;
+    -fx-font-family: 'Press Start 2P', cursive;
+}
+ .text-area .content {
+     -fx-background-color: #191919;
+ }
+
+.text-area{
+-fx-background-color: #191919;
+-fx-background-radius: 0;
+-fx-background-inset: 0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-text-fill: #a8a8a8;
+    -fx-font-size: 20;
+    -fx-font-family: 'Press Start 2P', cursive;
+     -fx-padding: 8;
+      -fx-border-style:solid outside;
+      -fx-border-width: 5;
+
+       -fx-border-color:#000000;
+}
+
+
+
+
+.button
+{
+    -fx-padding: 8 15 15 15;
+    -fx-background-insets: 0,0 0 5 0,0 0 6 0,0 0 7 0;
+    -fx-background-radius: 0;
+    -fx-background-color:
+            linear-gradient(from 0% 93% to 0% 100%, #333333 0%,   #262626 100%),
+             #303030,
+             #454545;
+    /*-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.75),4,0,0,1);*/
+    -fx-font-family: 'Press Start 2P', cursive;
+    -fx-font-size: 1.1em;
+    -fx-text-fill: #a8a8a8;
+}
+
+.button:hover
+{
+
+    -fx-background-color:
+            linear-gradient(from 0% 93% to 0% 100%,#242424 0%, #191919 100),
+            #191919,
+            #353535;
+
+}
+
+.button:pressed
+{
+     -fx-padding: 10 15 13 15;
+     -fx-background-insets: 2 0 0 0,2 0 3 0,2 0 4 0,2 0 5 0;
+
+}
+
+.text-area .text {
+     -fx-line-spacing: 15px;
+}
+
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+}
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
+}
