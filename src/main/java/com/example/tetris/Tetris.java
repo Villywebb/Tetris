@@ -50,7 +50,7 @@ public class Tetris extends Application {
     static Label scoreLabel;
     static Label levelLabel;
     static int score = 0;
-    static Block[] blocks = new Block[]{new LBlock1(), new LBlock2(), new IBlock(), new CubeBlock(), new TBlock(), new ZBlock1(), new ZBlock2()};
+    static Block[] blocks = new Block[]{new LBlock(), new JBlock(), new IBlock(), new OBlock(), new TBlock(), new SBlock(), new ZBlock()};
     static Color[] blockColors = new Color[]{Color.ORANGE, Color.BLUE, Color.CYAN, Color.YELLOW, Color.PURPLE, Color.GREEN, Color.RED};
     static int numBlocks = 1;
     static int frame = 0;
@@ -82,7 +82,7 @@ public class Tetris extends Application {
 
     static void starten(boolean newgame) {
         top5Scores.setId("top");
-
+        stage.setResizable(false);
         gameOver = new Label("GAME OVER");
         gameOver.setLayoutX(150);
         gameOver.setLayoutY(100);
@@ -863,13 +863,13 @@ public class Tetris extends Application {
     public static int[][] toPrint(int tetrisNum, int rotate) {
         int[][] toPrint = new int[][]{};
         switch (tetrisNum) {
-            case 0 -> toPrint = LBlock1.getRotations().get(rotate);
-            case 1 -> toPrint = LBlock2.getRotations().get(rotate);
+            case 0 -> toPrint = LBlock.getRotations().get(rotate);
+            case 1 -> toPrint = JBlock.getRotations().get(rotate);
             case 2 -> toPrint = IBlock.getRotations().get(rotate);
-            case 3 -> toPrint = CubeBlock.getRotations().get(rotate);
+            case 3 -> toPrint = OBlock.getRotations().get(rotate);
             case 4 -> toPrint = TBlock.getRotations().get(rotate);
-            case 5 -> toPrint = ZBlock1.getRotations().get(rotate);
-            case 6 -> toPrint = ZBlock2.getRotations().get(rotate);
+            case 5 -> toPrint = SBlock.getRotations().get(rotate);
+            case 6 -> toPrint = ZBlock.getRotations().get(rotate);
             default -> {
             }
         }

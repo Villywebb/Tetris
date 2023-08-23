@@ -2,7 +2,7 @@ package com.example.tetris;
 
 import java.util.ArrayList;
 
-public class LBlock1 implements Block {
+public class LBlock implements Block {
     private static ArrayList<int[][]> rotations = new ArrayList<int[][]>();
     private double centerOffset = 17.5;
     private double yoff = 0;
@@ -14,7 +14,7 @@ public class LBlock1 implements Block {
     }
 
 
-    public LBlock1() {
+    public LBlock() {
 
         rotations.add(new int[][]{{0, 0, 1},
                                     {1, 1, 1},

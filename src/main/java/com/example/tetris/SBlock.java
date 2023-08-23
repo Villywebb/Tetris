@@ -2,9 +2,9 @@ package com.example.tetris;
 
 import java.util.ArrayList;
 
-public class CubeBlock implements Block {
-    private static ArrayList<int[][]> rotations = new ArrayList<>();
-    private double centerOffset = 35;
+public class SBlock implements Block {
+    private static ArrayList<int[][]> rotations = new ArrayList<int[][]>();
+    private double centerOffset = 17.5;
 
     private double yoff = 0;
     public double getOffsetY(){
@@ -15,27 +15,26 @@ public class CubeBlock implements Block {
     }
 
 
+    public SBlock() {
 
-    public CubeBlock() {
-
-        rotations.add(new int[][]{{1, 1, 0},
+        rotations.add(new int[][]{{0, 1, 1},
                 {1, 1, 0},
                 {0, 0, 0},
 
         });
-        rotations.add(new int[][]{{1, 1, 0},
-                {1, 1, 0},
-                {0, 0, 0},
+        rotations.add(new int[][]{{0, 1, 0},
+                {0, 1, 1},
+                {0, 0, 1},
 
         });
-        rotations.add(new int[][]{{1, 1, 0},
+        rotations.add(new int[][]{{0, 0, 0},
+                {0, 1, 1},
                 {1, 1, 0},
-                {0, 0, 0},
 
         });
-        rotations.add(new int[][]{{1, 1, 0},
+        rotations.add(new int[][]{{1, 0, 0},
                 {1, 1, 0},
-                {0, 0, 0},
+                {0, 1, 0},
 
         });
 
