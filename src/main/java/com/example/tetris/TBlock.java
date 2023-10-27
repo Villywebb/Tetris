@@ -17,8 +17,8 @@ public class TBlock implements Block {
     public TBlock() {
 
         rotations.add(new int[][]{{0, 1, 0},
-                {1, 1, 1},
-                {0, 0, 0},
+                                {1, 1, 1},
+                                {0, 0, 0},
 
         });
         rotations.add(new int[][]{{0, 1, 0},

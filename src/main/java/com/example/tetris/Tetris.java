@@ -335,7 +335,7 @@ public class Tetris extends Application {
     }
 
     public static void songPlayer() {
-        String musicFile = "src/main/resources/com/example/tetris/TETRIS PHONK.mp3";
+        String musicFile = "src/main/resources/com/example/tetris/Tetris.mp3";
         Media sound = new Media(new File(musicFile).toURI().toString());
         mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.setVolume(0.35);
@@ -506,7 +506,7 @@ public class Tetris extends Application {
 
                 timeline.stop();
                 if (hard == 0) {
-                    timer(cycleCount - (level * 12));
+                    timer(cycleCount);
                 } else if (hard == 1) {
                     timer(10);
                 }
